@@ -40,8 +40,8 @@ Before you begin, ensure you have the following installed:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/suite_spot.git
-cd suite_spot
+git clone https://github.com/MominMunir/SuiteSpot_HMS.git
+cd SuiteSpot_HMS
 ```
 
 ### 2. Database Setup
@@ -206,4 +206,3 @@ For support, email support@suitespot.com or open an issue in the GitHub reposito
 ---
 
 **Note**: This is a development version. For production deployment, ensure proper security configurations, use environment variables for sensitive data, and follow Spring Boot production best practices.
-
