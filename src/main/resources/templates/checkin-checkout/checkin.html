@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-in - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Guest Check-in</h1>
+            <p style="color: var(--text-secondary);">Search for confirmed bookings to check in guests</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Search Booking</h2>
+            </div>
+
+            <form th:action="@{/checkin-checkout/checkin/search}" method="post">
+                <div class="form-group">
+                    <label for="query">Booking ID, Guest Name, or ID Number</label>
+                    <input type="text" id="query" name="query" placeholder="Enter search term" required autofocus>
+                </div>
+
+                <div style="display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">Search</button>
+                    <a th:href="@{/dashboard}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </th:block>
+</body>
+</html>

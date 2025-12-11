@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-out Results - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Check-out Results</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Checked-in Guests</h2>
+            </div>
+
+            <table class="table" th:if="${!searchResults.isEmpty()}">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Guest Name</th>
+                        <th>Room</th>
+                        <th>Check-in Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="booking : ${searchResults}">
+                        <td th:text="'#' + ${booking.id}">BK001</td>
+                        <td th:text="${booking.guest.firstName + ' ' + booking.guest.lastName}">Guest Name</td>
+                        <td th:text="${booking.room.roomNumber}">101</td>
+                        <td th:text="${booking.checkInDate != null ? #temporals.format(booking.checkInDate, 'MMM dd, yyyy') : 'N/A'}">Jan 01, 2025</td>
+                        <td>
+                            <form th:action="@{/checkin-checkout/{id}/checkout(id=${booking.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem;">Check Out</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${searchResults.isEmpty()}" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                <p>No checked-in guests found matching "<span th:text="${query}"></span>"</p>
+                <a th:href="@{/checkin-checkout/checkout}" class="btn btn-secondary" style="margin-top: 1rem;">Try Again</a>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

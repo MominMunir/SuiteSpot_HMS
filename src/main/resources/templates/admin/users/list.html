@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Management - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>User Management</h1>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>All Users</h2>
+                <a th:href="@{/admin/users/new}" class="btn btn-primary">Add New User</a>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Full Name</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="user : ${users}">
+                        <td th:text="${user.username}">john_doe</td>
+                        <td th:text="${user.fullName}">John Doe</td>
+                        <td th:text="${user.email}">john@example.com</td>
+                        <td><span class="badge badge-info" th:text="${user.role}">RECEPTIONIST</span></td>
+                        <td>
+                            <span class="badge badge-success" th:if="${user.active}">Active</span>
+                            <span class="badge badge-danger" th:if="${!user.active}">Inactive</span>
+                        </td>
+                        <td>
+                            <a href="#" th:href="@{/admin/users/{id}/edit(id=${user.id})}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Edit</a>
+                            <form th:action="@{/admin/users/{id}/delete(id=${user.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="return confirm('Are you sure?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rooms - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Room Management</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Rooms</h2>
+                <a th:href="@{/rooms/new}" class="btn btn-primary">Add New Room</a>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <form method="get" style="display: flex; gap: 1rem;">
+                    <select name="type" style="padding: 0.75rem; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-primary);">
+                        <option value="">All Types</option>
+                        <option th:each="roomType : ${roomTypes}" th:value="${roomType}" th:text="${roomType}" 
+                                th:selected="${selectedType == roomType}"></option>
+                    </select>
+                    <button type="submit" class="btn btn-secondary">Filter</button>
+                </form>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Room Number</th>
+                        <th>Type</th>
+                        <th>Floor</th>
+                        <th>Capacity</th>
+                        <th>Price/Night</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody th:if="${rooms != null and !rooms.isEmpty()}">
+                    <tr th:each="room : ${rooms}">
+                        <td>
+                            <a href="#" th:href="@{/rooms/{id}(id=${room.id})}" style="color: var(--accent-primary); text-decoration: none;">
+                                <span th:text="${room.roomNumber}">101</span>
+                            </a>
+                        </td>
+                        <td th:text="${room.type}">DOUBLE</td>
+                        <td th:text="${room.floor}">1</td>
+                        <td th:text="${room.capacity}">2</td>
+                        <td>$<span th:text="${room.pricePerNight}">100.00</span></td>
+                        <td>
+                            <span class="badge" th:classappend="${'badge-' + #strings.toLowerCase(room.status.name())}">
+                                <span th:text="${room.status}">AVAILABLE</span>
+                            </span>
+                        </td>
+                        <td>
+                            <a href="#" th:href="@{/rooms/{id}/edit(id=${room.id})}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Edit</a>
+                            <form th:action="@{/rooms/{id}/delete(id=${room.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="return confirm('Are you sure?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody th:if="${rooms == null or rooms.isEmpty()}">
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            No rooms found. <a th:href="@{/rooms/new}" style="color: var(--accent-primary);">Add one</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+</body>
+</html>

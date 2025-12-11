@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head th:fragment="head">
+    <style>
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+        }
+
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--accent-primary);
+        }
+
+        .recent-bookings {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            padding: 1.5rem;
+        }
+
+        /* Added prominent header section with Create Booking button */
+        .dashboard-header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .dashboard-header-section h1 {
+            margin: 0;
+        }
+
+        .btn-create-booking {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--bg-primary) !important;
+            padding: 0.85rem 2rem !important;
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+            text-decoration: none !important;
+            display: inline-block;
+        }
+
+        .btn-create-booking:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 212, 191, 0.4);
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+        }
+
+        .btn-create-booking:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <div th:fragment="content">
+        <!-- Updated header with more prominent Create Booking button -->
+        <div class="dashboard-header-section">
+            <div>
+                <h1>Dashboard</h1>
+                <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0;">Welcome back! Here's an overview of your hotel.</p>
+            </div>
+            <a th:href="@{/bookings/new}" class="btn-create-booking">➕ Create New Booking</a>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Rooms</h3>
+                <div class="value" th:text="${totalRooms}">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Occupied Rooms</h3>
+                <div class="value" th:text="${occupiedRooms}">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Available Rooms</h3>
+                <div class="value" th:text="${availableRooms}">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Current Guests</h3>
+                <div class="value" th:text="${currentGuests}">0</div>
+            </div>
+        </div>
+
+        <!-- Recent Bookings -->
+        <div class="recent-bookings">
+            <div class="card-header">
+                <h2>Recent Bookings</h2>
+                <a th:href="@{/bookings}" class="btn btn-primary">View All</a>
+            </div>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Guest Name</th>
+                        <th>Room</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody th:if="${recentBookings == null or recentBookings.isEmpty()}">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-secondary);">No recent bookings</td>
+                    </tr>
+                </tbody>
+                <tbody th:if="${recentBookings != null and !recentBookings.isEmpty()}">
+                    <tr th:each="booking : ${recentBookings}">
+                        <td>
+                            <a th:href="@{/bookings/{id}(id=${booking.id})}" style="color: var(--accent-primary); text-decoration: none;">
+                                <span th:if="${booking.guest != null}" th:text="${booking.guest.firstName + ' ' + booking.guest.lastName}">Guest Name</span>
+                                <span th:if="${booking.guest == null}">N/A</span>
+                            </a>
+                        </td>
+                        <td th:text="${booking.room != null ? booking.room.roomNumber : 'N/A'}">101</td>
+                        <td th:if="${booking.checkInDate != null}" th:text="${#temporals.format(booking.checkInDate, 'MMM dd, yyyy')}">2025-01-01</td>
+                        <td th:if="${booking.checkInDate == null}">N/A</td>
+                        <td th:if="${booking.checkOutDate != null}" th:text="${#temporals.format(booking.checkOutDate, 'MMM dd, yyyy')}">2025-01-05</td>
+                        <td th:if="${booking.checkOutDate == null}">N/A</td>
+                        <td>
+                            <span th:if="${booking.status != null}" 
+                                  class="badge" th:classappend="${'badge-' + #strings.toLowerCase(booking.status.name())}"
+                                  th:text="${booking.status}">PENDING</span>
+                            <span th:if="${booking.status == null}" class="badge badge-pending">PENDING</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
+Request URL
+http://localhost:5173/checkin-checkout/checkin/search

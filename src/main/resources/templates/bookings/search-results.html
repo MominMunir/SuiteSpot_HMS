@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Available Rooms - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Available Rooms</h1>
+            <p style="color: var(--text-secondary);">
+                For <span th:text="${guest.firstName + ' ' + guest.lastName}"></span> 
+                from <span th:text="${checkInDate != null ? #temporals.format(checkInDate, 'MMM dd') : 'N/A'}"></span> 
+                to <span th:text="${checkOutDate != null ? #temporals.format(checkOutDate, 'MMM dd') : 'N/A'}"></span>
+            </p>
+        </div>
+
+        <div class="grid grid-3">
+            <div th:each="room : ${availableRooms}" class="card">
+                <div class="card-header">
+                    <h3 th:text="'Room ' + ${room.roomNumber}">Room 101</h3>
+                    <span class="badge badge-success">Available</span>
+                </div>
+
+                <div style="margin-bottom: 1rem;">
+                    <p><strong>Type:</strong> <span th:text="${room.type}">DOUBLE</span></p>
+                    <p><strong>Floor:</strong> <span th:text="${room.floor}">1</span></p>
+                    <p><strong>Capacity:</strong> <span th:text="${room.capacity}">2</span></p>
+                    <p style="color: var(--accent-primary); font-size: 1.2rem; margin-top: 1rem;">
+                        <strong>$<span th:text="${#numbers.formatDecimal(room.pricePerNight, 1, 2)}">100.00</span>/night</strong>
+                    </p>
+                </div>
+
+                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1rem;">
+                    <strong>Amenities:</strong> <span th:text="${room.amenities}">WiFi, AC</span>
+                </p>
+
+                <form th:action="@{/bookings}" method="post" style="display: flex; gap: 0.5rem;">
+                    <input type="hidden" name="guestId" th:value="${guest.id}">
+                    <input type="hidden" name="roomId" th:value="${room.id}">
+                    <input type="hidden" name="checkInDate" th:value="${checkInDate}">
+                    <input type="hidden" name="checkOutDate" th:value="${checkOutDate}">
+                    <button type="submit" class="btn btn-primary" style="flex: 1;">Book Now</button>
+                </form>
+            </div>
+        </div>
+
+        <div th:if="${availableRooms == null or availableRooms.isEmpty()}" style="text-align: center; padding: 3rem; background-color: var(--bg-secondary); border-radius: var(--radius);">
+            <h3 style="color: var(--text-secondary); margin-bottom: 1rem;">No Rooms Available</h3>
+            <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                Unfortunately, there are no rooms available for the selected dates and room type.
+            </p>
+            <a th:href="@{/bookings/new}" class="btn btn-primary">Try Different Dates</a>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <a th:href="@{/bookings/new}" class="btn btn-secondary">Back to Search</a>
+        </div>
+    </th:block>
+</body>
+</html>

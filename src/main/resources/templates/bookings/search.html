@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Booking - SuiteSpot</title>
+</head>
+<body>
+    <!-- Fixed fragment syntax to match layout expectations -->
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Create New Booking</h1>
+            <p style="color: var(--text-secondary);">Search for available rooms and create a booking</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Search Available Rooms</h2>
+            </div>
+
+            <form th:action="@{/bookings/search}" method="post">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div class="form-group">
+                        <label for="guestId">Guest *</label>
+                        <select id="guestId" name="guestId" required>
+                            <option value="">Select Guest</option>
+                            <option th:each="guest : ${guests}" th:value="${guest.id}" 
+                                    th:text="${guest.firstName + ' ' + guest.lastName}">Guest Name</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkInDate">Check-in Date *</label>
+                        <input type="date" id="checkInDate" name="checkInDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkOutDate">Check-out Date *</label>
+                        <input type="date" id="checkOutDate" name="checkOutDate" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="roomType">Room Type (Optional)</label>
+                        <select id="roomType" name="roomType">
+                            <option value="">Any Type</option>
+                            <option th:each="type : ${roomTypes}" th:value="${type}" th:text="${type}">DOUBLE</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">Search Rooms</button>
+                    <a th:href="@{/bookings}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guests - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Guest Management</h1>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Guests</h2>
+                <a th:href="@{/guests/new}" class="btn btn-primary">Add New Guest</a>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <form method="get" style="display: flex; gap: 1rem;">
+                    <input type="text" name="search" placeholder="Search by name or ID" th:value="${search}" 
+                           style="flex: 1; padding: 0.75rem; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-primary);">
+                    <button type="submit" class="btn btn-secondary">Search</button>
+                </form>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>ID Number</th>
+                        <th>Country</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody th:if="${guests != null and !guests.isEmpty()}">
+                    <tr th:each="guest : ${guests}">
+                        <td>
+                            <a href="#" th:href="@{/guests/{id}(id=${guest.id})}" style="color: var(--accent-primary); text-decoration: none;">
+                                <span th:text="${guest.firstName + ' ' + guest.lastName}">Guest Name</span>
+                            </a>
+                        </td>
+                        <td th:text="${guest.email}">email@example.com</td>
+                        <td th:text="${guest.phone}">+1234567890</td>
+                        <td th:text="${guest.idNumber}">12345</td>
+                        <td th:text="${guest.country}">USA</td>
+                        <td>
+                            <a href="#" th:href="@{/guests/{id}/edit(id=${guest.id})}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Edit</a>
+                            <form th:action="@{/guests/{id}/delete(id=${guest.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-danger" style="padding: 0.5rem 1rem; font-size: 0.9rem;" onclick="return confirm('Are you sure?');">Delete</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody th:if="${guests == null or guests.isEmpty()}">
+                    <tr>
+                        <td colspan="6" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            No guests found. <a th:href="@{/guests/new}" style="color: var(--accent-primary);">Add one</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+</body>
+</html>

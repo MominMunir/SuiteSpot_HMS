@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-out Confirmation & Bill - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Check-out & Final Bill</h1>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Guest Information</h2>
+                </div>
+                <div>
+                    <p><strong>Name:</strong> <span th:text="${booking.guest.firstName + ' ' + booking.guest.lastName}">Guest Name</span></p>
+                    <p><strong>ID:</strong> <span th:text="${booking.guest.idNumber}">12345678</span></p>
+                    <p><strong>Phone:</strong> <span th:text="${booking.guest.phone}">+1234567890</span></p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Stay Summary</h2>
+                </div>
+                <div>
+                    <p><strong>Room:</strong> <span th:text="${booking.room.roomNumber}">101</span></p>
+                    <p><strong>Check-in:</strong> <span th:text="${booking.checkInDate != null ? #temporals.format(booking.checkInDate, 'MMM dd, yyyy') : 'N/A'}">Jan 01, 2025</span></p>
+                    <p><strong>Check-out:</strong> <span th:text="${booking.checkOutDate != null ? #temporals.format(booking.checkOutDate, 'MMM dd, yyyy') : 'N/A'}">Jan 05, 2025</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Final Bill</h2>
+            </div>
+
+            <table class="table" style="margin-top: 1rem;">
+                <tr style="border-bottom: 1px solid var(--border-color); padding: 1rem 0;">
+                    <td><strong>Room Charges:</strong></td>
+                    <td style="text-align: right;">$<span th:text="${#numbers.formatDecimal(bill.roomCharges, 1, 2)}">400.00</span></td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color); padding: 1rem 0;">
+                    <td><strong>Service Charges (5%):</strong></td>
+                    <td style="text-align: right;">$<span th:text="${#numbers.formatDecimal(bill.serviceCharges, 1, 2)}">20.00</span></td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color); padding: 1rem 0;">
+                    <td><strong>Subtotal:</strong></td>
+                    <td style="text-align: right;">$<span th:text="${#numbers.formatDecimal(bill.roomCharges.add(bill.serviceCharges), 1, 2)}">420.00</span></td>
+                </tr>
+                <tr style="border-bottom: 1px solid var(--border-color); padding: 1rem 0;">
+                    <td><strong>Taxes (10%):</strong></td>
+                    <td style="text-align: right;">$<span th:text="${#numbers.formatDecimal(bill.taxes, 1, 2)}">42.00</span></td>
+                </tr>
+                <tr th:if="${bill.discount > 0}" style="border-bottom: 1px solid var(--border-color); padding: 1rem 0;">
+                    <td><strong>Discount:</strong></td>
+                    <td style="text-align: right; color: var(--success);">-$<span th:text="${#numbers.formatDecimal(bill.discount, 1, 2)}">0.00</span></td>
+                </tr>
+                <tr style="padding: 1rem 0; font-size: 1.2rem; color: var(--accent-primary);">
+                    <td><strong>TOTAL DUE:</strong></td>
+                    <td style="text-align: right;"><strong>$<span th:text="${#numbers.formatDecimal(bill.totalAmount, 1, 2)}">462.00</span></strong></td>
+                </tr>
+            </table>
+
+            <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                <p><strong>Payment Status:</strong> 
+                    <span class="badge badge-warning">PENDING</span>
+                </p>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <a th:href="@{/checkin-checkout/checkout}" class="btn btn-primary">Process Another Check-out</a>
+            <a th:href="@{/dashboard}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </th:block>
+</body>
+</html>

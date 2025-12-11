@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>System Reports</h1>
+            <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0;">Analytics and statistics overview</p>
+        </div>
+
+        <div th:if="${error != null}" class="card" style="background-color: var(--error-bg); border-left: 4px solid var(--error); margin-bottom: 2rem;">
+            <p style="color: var(--error); margin: 0;" th:text="${error}"></p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="grid grid-3" style="margin-bottom: 2rem;">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Total Bookings</h2>
+                </div>
+                <p style="font-size: 2rem; font-weight: bold; color: var(--accent-primary); margin: 1rem 0;" th:text="${totalBookings}">0</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Confirmed</h2>
+                </div>
+                <p style="font-size: 2rem; font-weight: bold; color: var(--accent-primary); margin: 1rem 0;" th:text="${confirmedBookings}">0</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Checked In</h2>
+                </div>
+                <p style="font-size: 2rem; font-weight: bold; color: var(--accent-primary); margin: 1rem 0;" th:text="${checkedInBookings}">0</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Checked Out</h2>
+                </div>
+                <p style="font-size: 2rem; font-weight: bold; color: var(--accent-primary); margin: 1rem 0;" th:text="${checkedOutBookings}">0</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Cancelled</h2>
+                </div>
+                <p style="font-size: 2rem; font-weight: bold; color: var(--accent-primary); margin: 1rem 0;" th:text="${cancelledBookings}">0</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Total Users</h2>
+                </div>
+                <p style="font-size: 2rem; font-weight: bold; color: var(--accent-primary); margin: 1rem 0;" th:text="${totalUsers}">0</p>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Total Rooms</h2>
+                </div>
+                <p style="font-size: 2rem; font-weight: bold; color: var(--accent-primary); margin: 1rem 0;" th:text="${totalRooms}">0</p>
+            </div>
+
+            <div class="card" style="background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary)); color: white;">
+                <div class="card-header" style="color: white;">
+                    <h2>Total Revenue</h2>
+                </div>
+                <p style="font-size: 2rem; font-weight: bold; color: white; margin: 1rem 0;">
+                    $<span th:text="${#numbers.formatDecimal(totalRevenue, 1, 2)}">0.00</span>
+                </p>
+            </div>
+        </div>
+
+        <!-- Booking Status Breakdown -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Booking Status Breakdown</h2>
+            </div>
+            <div style="padding: 1rem;">
+                <p><strong>Total Bookings:</strong> <span th:text="${totalBookings}">0</span></p>
+                <p><strong>Confirmed:</strong> <span th:text="${confirmedBookings}">0</span></p>
+                <p><strong>Checked In:</strong> <span th:text="${checkedInBookings}">0</span></p>
+                <p><strong>Checked Out:</strong> <span th:text="${checkedOutBookings}">0</span></p>
+                <p><strong>Cancelled:</strong> <span th:text="${cancelledBookings}">0</span></p>
+            </div>
+        </div>
+
+        <!-- Revenue Summary -->
+        <div class="card" style="margin-top: 2rem;">
+            <div class="card-header">
+                <h2>Revenue Summary</h2>
+            </div>
+            <div style="padding: 1rem;">
+                <p style="font-size: 1.5rem; font-weight: bold; color: var(--accent-primary);">
+                    <strong>Total Revenue:</strong> $<span th:text="${#numbers.formatDecimal(totalRevenue, 1, 2)}">0.00</span>
+                </p>
+                <p style="color: var(--text-secondary); margin-top: 0.5rem;">
+                    Revenue calculated from all generated bills
+                </p>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem;">
+            <a th:href="@{/admin/dashboard}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </th:block>
+</body>
+</html>
+

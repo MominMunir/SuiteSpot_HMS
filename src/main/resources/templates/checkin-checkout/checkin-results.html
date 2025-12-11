@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-in Results - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Check-in Results</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Matching Bookings</h2>
+            </div>
+
+            <table class="table" th:if="${!searchResults.isEmpty()}">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Guest Name</th>
+                        <th>Room</th>
+                        <th>Check-in Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="booking : ${searchResults}">
+                        <td th:text="'#' + ${booking.id}">BK001</td>
+                        <td th:text="${booking.guest.firstName + ' ' + booking.guest.lastName}">Guest Name</td>
+                        <td th:text="${booking.room.roomNumber}">101</td>
+                        <td th:text="${booking.checkInDate != null ? #temporals.format(booking.checkInDate, 'MMM dd, yyyy') : 'N/A'}">Jan 01, 2025</td>
+                        <td>
+                            <form th:action="@{/checkin-checkout/{id}/checkin(id=${booking.id})}" method="post" style="display: inline;">
+                                <button type="submit" class="btn btn-success" style="padding: 0.5rem 1rem;">Check In</button>
+                            </form>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${searchResults.isEmpty()}" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                <p>No bookings found matching "<span th:text="${query}"></span>"</p>
+                <p th:if="${error != null}" style="color: var(--error); margin-top: 1rem;" th:text="${error}"></p>
+                <div style="margin-top: 1rem;">
+                    <a th:href="@{/checkin-checkout/checkin}" class="btn btn-secondary">Try Again</a>
+                    <a th:href="@{/bookings}" class="btn btn-primary" style="margin-left: 0.5rem;">View All Bookings</a>
+                </div>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

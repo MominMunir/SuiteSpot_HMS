@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - SuiteSpot</title>
+    <style>
+        /* Added styling for admin section Create Booking button */
+        .admin-header-section {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 2rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-create-booking {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--bg-primary) !important;
+            padding: 0.85rem 2rem !important;
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+            text-decoration: none !important;
+            display: inline-block;
+        }
+
+        .btn-create-booking:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 212, 191, 0.4);
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+        }
+
+        .btn-create-booking:active {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <!-- Added prominent Create Booking button in admin dashboard header -->
+        <div class="admin-header-section">
+            <div>
+                <h1>Admin Dashboard</h1>
+                <p style="color: var(--text-secondary); margin: 0.5rem 0 0 0;">System overview and management</p>
+            </div>
+            <a th:href="@{/bookings/new}" class="btn-create-booking">➕ Create New Booking</a>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <h3>Total Bookings</h3>
+                <div class="value" th:text="${totalBookings}">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Users</h3>
+                <div class="value" th:text="${totalUsers}">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Pending Bookings</h3>
+                <div class="value" th:text="${pendingBookings}">0</div>
+            </div>
+            <div class="stat-card">
+                <h3>Total Rooms</h3>
+                <div class="value" th:text="${totalRooms}">0</div>
+            </div>
+        </div>
+
+        <!-- Management Links -->
+        <div class="grid grid-3">
+            <div class="card">
+                <div class="card-header">
+                    <h2>User Management</h2>
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">Manage system users and assign roles</p>
+                <a th:href="@{/admin/users}" class="btn btn-primary" style="display: block; text-align: center;">Manage Users</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>System Settings</h2>
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">Configure hotel settings and policies</p>
+                <a th:href="@{/admin/settings}" class="btn btn-primary" style="display: block; text-align: center;">View Settings</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Reports</h2>
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">View system reports and analytics</p>
+                <a th:href="@{/admin/reports}" class="btn btn-primary" style="display: block; text-align: center;">View Reports</a>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Database Backup</h2>
+                </div>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">Create and manage database backups</p>
+                <a th:href="@{/admin/backup}" class="btn btn-primary" style="display: block; text-align: center;">Backup Database</a>
+            </div>
+        </div>
+
+        <!-- Recent Bookings -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Recent Bookings</h2>
+                <a th:href="@{/bookings}" class="btn btn-secondary">View All</a>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Guest</th>
+                        <th>Room</th>
+                        <th>Check-in</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:if="${recentBookings == null or recentBookings.isEmpty()}">
+                        <td colspan="5" style="text-align: center; color: var(--text-secondary);">No recent bookings</td>
+                    </tr>
+                    <tr th:each="booking : ${recentBookings}" th:if="${recentBookings != null and !recentBookings.isEmpty()}">
+                        <td th:text="'#' + ${booking.id}">BK001</td>
+                        <td th:text="${booking.guest != null ? (booking.guest.firstName + ' ' + booking.guest.lastName) : 'N/A'}">Guest Name</td>
+                        <td th:text="${booking.room != null ? booking.room.roomNumber : 'N/A'}">101</td>
+                        <td th:text="${booking.checkInDate != null ? #temporals.format(booking.checkInDate, 'MMM dd') : 'N/A'}">Jan 01</td>
+                        <td>
+                            <span class="badge" th:classappend="'badge-' + ${booking.status != null ? booking.status.toString().toLowerCase() : 'pending'}">
+                                <span th:text="${booking.status != null ? booking.status : 'PENDING'}">PENDING</span>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+</body>
+</html>

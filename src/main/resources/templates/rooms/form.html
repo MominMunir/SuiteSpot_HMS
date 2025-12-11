@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Form - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1 th:if="${room.id == null}">Add New Room</h1>
+            <h1 th:if="${room.id != null}">Edit Room</h1>
+        </div>
+
+        <div class="card">
+            <form th:action="${room.id == null ? '/rooms' : '/rooms/' + room.id}" method="post">
+                <input type="hidden" th:if="${room.id != null}" name="id" th:value="${room.id}">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div class="form-group">
+                        <label for="roomNumber">Room Number *</label>
+                        <input type="text" id="roomNumber" name="roomNumber" th:value="${room.roomNumber}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="type">Room Type *</label>
+                        <select id="type" name="type" required>
+                            <option value="">Select Type</option>
+                            <option th:each="roomType : ${roomTypes}" th:value="${roomType}" th:text="${roomType}" 
+                                    th:selected="${room != null and room.type != null and room.type == roomType}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Status *</label>
+                        <select id="status" name="status" required>
+                            <option value="">Select Status</option>
+                            <option th:each="status : ${roomStatuses}" th:value="${status}" th:text="${status}" 
+                                    th:selected="${room != null and room.status != null and room.status == status}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="floor">Floor</label>
+                        <input type="number" id="floor" name="floor" th:value="${room.floor}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="capacity">Capacity *</label>
+                        <input type="number" id="capacity" name="capacity" th:value="${room.capacity}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="pricePerNight">Price Per Night *</label>
+                        <input type="number" id="pricePerNight" name="pricePerNight" step="0.01" th:value="${room.pricePerNight}" required>
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="amenities">Amenities</label>
+                        <input type="text" id="amenities" name="amenities" th:value="${room.amenities}" placeholder="e.g., WiFi, AC, TV">
+                    </div>
+
+                    <div class="form-group" style="grid-column: 1 / -1;">
+                        <label for="description">Description</label>
+                        <textarea id="description" name="description" rows="4" th:text="${room.description}"></textarea>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">Save Room</button>
+                    <a th:href="@{/rooms}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </th:block>
+</body>
+</html>

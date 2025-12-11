@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-in Confirmation - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Check-in Successful</h1>
+        </div>
+
+        <div class="alert alert-success" th:if="${success}" th:text="${success}"></div>
+
+        <div class="grid grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Guest Information</h2>
+                </div>
+                <div>
+                    <p><strong>Name:</strong> <span th:text="${booking.guest.firstName + ' ' + booking.guest.lastName}">Guest Name</span></p>
+                    <p><strong>ID:</strong> <span th:text="${booking.guest.idNumber}">12345678</span></p>
+                    <p><strong>Phone:</strong> <span th:text="${booking.guest.phone}">+1234567890</span></p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Room Assignment</h2>
+                </div>
+                <div>
+                    <p><strong>Room Number:</strong> <span th:text="${booking.room.roomNumber}">101</span></p>
+                    <p><strong>Floor:</strong> <span th:text="${booking.room.floor}">1</span></p>
+                    <p><strong>Type:</strong> <span th:text="${booking.room.type}">DOUBLE</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Stay Details</h2>
+            </div>
+            <div>
+                <p><strong>Check-in:</strong> <span th:text="${booking.checkInDate != null ? #temporals.format(booking.checkInDate, 'MMM dd, yyyy') : 'N/A'}">Jan 01, 2025</span></p>
+                <p><strong>Check-out:</strong> <span th:text="${booking.checkOutDate != null ? #temporals.format(booking.checkOutDate, 'MMM dd, yyyy') : 'N/A'}">Jan 05, 2025</span></p>
+                <p th:if="${booking.specialRequests}"><strong>Special Requests:</strong> <span th:text="${booking.specialRequests}"></span></p>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+            <a th:href="@{/checkin-checkout/checkin}" class="btn btn-primary">Check In Another Guest</a>
+            <a th:href="@{/dashboard}" class="btn btn-secondary">Back to Dashboard</a>
+        </div>
+    </th:block>
+</body>
+</html>

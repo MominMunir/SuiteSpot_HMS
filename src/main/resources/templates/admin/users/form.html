@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Form - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1 th:if="${user.id == null}">Create New User</h1>
+            <h1 th:if="${user.id != null}">Edit User</h1>
+        </div>
+
+        <div class="card">
+            <form th:action="${user.id == null ? @{/admin/users} : @{/admin/users/{id}(id=${user.id})}}" method="post">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div class="form-group">
+                        <label for="username">Username *</label>
+                        <input type="text" id="username" name="username" th:value="${user.username}" required th:disabled="${user.id != null}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" name="fullName" th:value="${user.fullName}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" id="email" name="email" th:value="${user.email}" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="role">Role *</label>
+                        <select id="role" name="role" required>
+                            <option th:each="role : ${roles}" th:value="${role}" th:text="${role}" 
+                                    th:selected="${user.role == role}"></option>
+                        </select>
+                    </div>
+
+                    <div class="form-group" th:if="${user.id == null}">
+                        <label for="password">Password *</label>
+                        <input type="password" id="password" name="password" required>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">Save User</button>
+                    <a th:href="@{/admin/users}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </th:block>
+</body>
+</html>

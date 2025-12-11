@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Settings - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>System Settings</h1>
+            <p style="color: var(--text-secondary);">Configure hotel policies and system parameters</p>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Hotel Information</h2>
+            </div>
+
+            <form th:action="@{/admin/settings}" method="post">
+                <input type="hidden" name="id" th:value="${settings.id}">
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                    <div class="form-group">
+                        <label for="hotelName">Hotel Name</label>
+                        <input type="text" id="hotelName" name="hotelName" th:value="${settings.hotelName}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hotelEmail">Hotel Email</label>
+                        <input type="email" id="hotelEmail" name="hotelEmail" th:value="${settings.hotelEmail}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="hotelPhone">Hotel Phone</label>
+                        <input type="text" id="hotelPhone" name="hotelPhone" th:value="${settings.hotelPhone}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="currency">Currency</label>
+                        <select id="currency" name="currency">
+                            <option value="USD" th:selected="${settings.currency == 'USD'}">USD ($)</option>
+                            <option value="EUR" th:selected="${settings.currency == 'EUR'}">EUR (€)</option>
+                            <option value="GBP" th:selected="${settings.currency == 'GBP'}">GBP (£)</option>
+                            <option value="INR" th:selected="${settings.currency == 'INR'}">INR (₹)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                    <h3>Financial Settings</h3>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                    <div class="form-group">
+                        <label for="taxRate">Tax Rate (%)</label>
+                        <input type="number" id="taxRate" name="taxRate" step="0.01" th:value="${settings.taxRate}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="serviceChargeRate">Service Charge Rate (%)</label>
+                        <input type="number" id="serviceChargeRate" name="serviceChargeRate" step="0.01" th:value="${settings.serviceChargeRate}">
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                    <h3>Operational Settings</h3>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-top: 1rem;">
+                    <div class="form-group">
+                        <label for="checkInTime">Check-in Time (24hr)</label>
+                        <input type="number" id="checkInTime" name="checkInTime" min="0" max="23" th:value="${settings.checkInTime}">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="checkOutTime">Check-out Time (24hr)</label>
+                        <input type="number" id="checkOutTime" name="checkOutTime" min="0" max="23" th:value="${settings.checkOutTime}">
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                    <h3>Policies</h3>
+                </div>
+
+                <div class="form-group" style="margin-top: 1rem;">
+                    <label for="cancellationPolicy">Cancellation Policy</label>
+                    <textarea id="cancellationPolicy" name="cancellationPolicy" rows="4" th:text="${settings.cancellationPolicy}"></textarea>
+                </div>
+
+                <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                    <button type="submit" class="btn btn-primary">Save Settings</button>
+                    <form th:action="@{/admin/settings/reset}" method="post" style="display: inline;">
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Reset all settings to defaults?');">Reset to Defaults</button>
+                    </form>
+                </div>
+            </form>
+        </div>
+    </th:block>
+</body>
+</html>

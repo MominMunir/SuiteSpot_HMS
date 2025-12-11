@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Database Backup - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Database Backup</h1>
+            <p style="color: var(--text-secondary);">Create and manage database backups</p>
+        </div>
+
+        <div th:if="${success}" class="alert alert-success" th:text="${success}"></div>
+        <div th:if="${error}" class="alert alert-error" th:text="${error}"></div>
+
+        <!-- Create Backup Section -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Create New Backup</h2>
+            </div>
+
+            <form th:action="@{/admin/backup/create}" method="post">
+                <div class="form-group">
+                    <label for="backupLocation">Backup Location *</label>
+                    <input type="text" id="backupLocation" name="backupLocation" 
+                           th:value="${backupLocation}" required
+                           placeholder="Enter directory path for backup">
+                    <small style="color: var(--text-secondary); display: block; margin-top: 0.5rem;">
+                        Example: C:\backups or /home/user/backups
+                    </small>
+                </div>
+
+                <div class="form-group">
+                    <label for="backupType">Backup Type *</label>
+                    <select id="backupType" name="backupType" required>
+                        <option value="full" selected>Full Backup</option>
+                        <option value="incremental">Incremental Backup</option>
+                    </select>
+                </div>
+
+                <div style="margin-top: 1.5rem;">
+                    <button type="submit" class="btn btn-primary">Create Backup</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Existing Backups Section -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Existing Backups</h2>
+            </div>
+
+            <div th:if="${backups == null or backups.isEmpty()}" 
+                 style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                <p>No backups found in the specified location.</p>
+            </div>
+
+            <table class="table" th:if="${backups != null and !backups.isEmpty()}">
+                <thead>
+                    <tr>
+                        <th>File Name</th>
+                        <th>Size</th>
+                        <th>Last Modified</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="backup : ${backups}">
+                        <td th:text="${backup.name}">backup.sql</td>
+                        <td th:text="${#numbers.formatDecimal(backup.size / 1024.0, 1, 2) + ' KB'}">1024 KB</td>
+                        <td th:text="${#temporals.format(backup.lastModified, 'MMM dd, yyyy HH:mm')}">
+                            Jan 01, 2025 10:00
+                        </td>
+                        <td>
+                            <span class="badge badge-success">Verified</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Backup Instructions -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Backup Instructions</h2>
+            </div>
+            <div style="color: var(--text-secondary);">
+                <p><strong>Full Backup:</strong> Creates a complete backup of the entire database.</p>
+                <p><strong>Incremental Backup:</strong> Currently creates a full backup (incremental support coming soon).</p>
+                <p><strong>Requirements:</strong></p>
+                <ul style="margin-left: 2rem; margin-top: 0.5rem;">
+                    <li>PostgreSQL must be installed on the server</li>
+                    <li>pg_dump utility must be accessible</li>
+                    <li>If pg_dump is not in PATH, configure it in application.properties: <code>backup.pg-dump.path=C:\\Program Files\\PostgreSQL\\18\\bin\\pg_dump.exe</code></li>
+                </ul>
+                <p style="margin-top: 1rem;"><strong>Restore:</strong> To restore a backup, use:</p>
+                <code style="display: block; padding: 0.5rem; background: var(--bg-secondary); border-radius: 4px; margin-top: 0.5rem;">
+                    pg_restore -h localhost -p 6969 -U postgres -d suitespot backup_file.backup
+                </code>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>
+

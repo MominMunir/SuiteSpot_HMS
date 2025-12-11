@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>My Profile</h1>
+        </div>
+
+        <div class="card" th:if="${user != null}">
+            <div class="card-header">
+                <h2>Account Information</h2>
+            </div>
+
+            <div class="form-group">
+                <label>Full Name</label>
+                <input type="text" th:value="${user.fullName}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>Username</label>
+                <input type="text" th:value="${user.username}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>Email</label>
+                <input type="email" th:value="${user.email}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>Role</label>
+                <input type="text" th:value="${user.role}" disabled>
+            </div>
+
+            <div class="form-group">
+                <label>Status</label>
+                <span class="badge badge-success" th:if="${user.active}">Active</span>
+                <span class="badge badge-danger" th:if="${!user.active}">Inactive</span>
+            </div>
+        </div>
+
+        <div class="card" th:if="${user == null}">
+            <div class="card-header">
+                <h2>Error</h2>
+            </div>
+            <p th:if="${error != null}" style="color: var(--error);" th:text="${error}"></p>
+            <p th:if="${error == null}" style="color: var(--error);">Unable to load profile information. Please try logging in again.</p>
+            <a th:href="@{/login}" class="btn btn-primary" style="margin-top: 1rem;">Go to Login</a>
+        </div>
+    </th:block>
+</body>
+</html>

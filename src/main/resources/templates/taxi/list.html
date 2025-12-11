@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxi Requests - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Taxi Service</h1>
+            <p style="color: var(--text-secondary);">Manage guest taxi requests</p>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Taxi Requests</h2>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <form method="get" style="display: flex; gap: 1rem;">
+                    <select name="status" style="padding: 0.75rem; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-primary);">
+                        <option value="">All Statuses</option>
+                        <option th:each="reqStatus : ${requestStatuses}" th:value="${reqStatus}" th:text="${reqStatus}" 
+                                th:selected="${selectedStatus == reqStatus}"></option>
+                    </select>
+                    <button type="submit" class="btn btn-secondary">Filter</button>
+                </form>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Guest</th>
+                        <th>Destination</th>
+                        <th>Status</th>
+                        <th>Requested Time</th>
+                        <th>Driver</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="request : ${taxiRequests}">
+                        <td>
+                            <a href="#" th:href="@{/taxi/{id}(id=${request.id})}" style="color: var(--accent-primary); text-decoration: none;">
+                                <span th:text="'#' + ${request.id}">TR001</span>
+                            </a>
+                        </td>
+                        <td th:text="${request.booking.guest.firstName + ' ' + request.booking.guest.lastName}">Guest Name</td>
+                        <td th:text="${request.destination}">Airport</td>
+                        <td>
+                            <span class="badge" th:classappend="'badge-' + ${request.status.toString().toLowerCase()}">
+                                <span th:text="${request.status}">PENDING</span>
+                            </span>
+                        </td>
+                        <td th:text="${request.requestedTime != null ? #temporals.format(request.requestedTime, 'MMM dd, HH:mm') : 'N/A'}">Jan 01, 10:00</td>
+                        <td th:text="${request.driverName} ?: '-'">John Smith</td>
+                        <td>
+                            <a href="#" th:href="@{/taxi/{id}(id=${request.id})}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div th:if="${taxiRequests.isEmpty()}" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                No taxi requests found.
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

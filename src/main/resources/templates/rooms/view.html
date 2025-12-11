@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Room Details - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1 th:text="'Room ' + ${room.roomNumber}">Room 101</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Room Information</h2>
+                <a href="#" th:href="@{/rooms/{id}/edit(id=${room.id})}" class="btn btn-primary">Edit</a>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div>
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">Type</label>
+                    <p th:text="${room.type != null ? room.type : 'N/A'}">DOUBLE</p>
+                </div>
+                <div>
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">Floor</label>
+                    <p th:text="${room.floor != null ? room.floor : 'N/A'}">1</p>
+                </div>
+                <div>
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">Capacity</label>
+                    <p th:text="${room.capacity != null ? room.capacity : 'N/A'}">2</p>
+                </div>
+                <div>
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">Price Per Night</label>
+                    <p th:if="${room.pricePerNight != null}">$<span th:text="${#numbers.formatDecimal(room.pricePerNight, 1, 2)}">100.00</span></p>
+                    <p th:if="${room.pricePerNight == null}">N/A</p>
+                </div>
+                <div>
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">Status</label>
+                    <p>
+                        <span th:if="${room.status != null}" class="badge" th:classappend="${'badge-' + #strings.toLowerCase(room.status.name())}">
+                            <span th:text="${room.status}">AVAILABLE</span>
+                        </span>
+                        <span th:if="${room.status == null}" class="badge badge-pending">N/A</span>
+                    </p>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                <label style="color: var(--text-secondary); font-size: 0.9rem;">Amenities</label>
+                <p th:text="${room.amenities != null ? room.amenities : 'No amenities listed'}">WiFi, AC, TV</p>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <label style="color: var(--text-secondary); font-size: 0.9rem;">Description</label>
+                <p th:text="${room.description != null ? room.description : 'No description'}">Beautiful spacious room with modern amenities</p>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                <a href="#" th:href="@{/rooms/{id}/edit(id=${room.id})}" class="btn btn-primary">Edit Room</a>
+                <form th:action="@{/rooms/{id}/delete(id=${room.id})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this room?');">Delete Room</button>
+                </form>
+                <a th:href="@{/rooms}" class="btn btn-secondary">Back to Rooms</a>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

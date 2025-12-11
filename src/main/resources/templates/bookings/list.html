@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookings - SuiteSpot</title>
+    <style>
+        /* Added styling for prominent Create Booking button */
+        .booking-header-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-create-booking {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: var(--bg-primary) !important;
+            padding: 0.85rem 2rem !important;
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            border: none;
+            border-radius: var(--radius);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(45, 212, 191, 0.3);
+            text-decoration: none !important;
+            display: inline-block;
+        }
+
+        .btn-create-booking:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 212, 191, 0.4);
+            background: linear-gradient(135deg, var(--accent-secondary), var(--accent-primary));
+        }
+
+        .btn-create-booking:active {
+            transform: translateY(0);
+        }
+
+        .filter-section {
+            margin-bottom: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>Booking Management</h1>
+        </div>
+
+        <div class="card">
+            <!-- Restructured header with prominent Create Booking button on the right -->
+            <div class="booking-header-actions">
+                <h2>All Bookings</h2>
+                <a th:href="@{/bookings/new}" class="btn-create-booking">➕ Create New Booking</a>
+            </div>
+
+            <div class="filter-section">
+                <form method="get" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                    <div>
+                        <label for="search" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Search</label>
+                        <input type="text" id="search" name="search" 
+                               th:value="${searchQuery}" 
+                               placeholder="Booking ID, Name, ID Number, Email, Phone"
+                               style="width: 100%; padding: 0.75rem; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-primary);">
+                    </div>
+                    <div>
+                        <label for="startDate" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">Start Date</label>
+                        <input type="date" id="startDate" name="startDate" 
+                               style="width: 100%; padding: 0.75rem; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-primary);">
+                    </div>
+                    <div>
+                        <label for="endDate" style="display: block; margin-bottom: 0.5rem; color: var(--text-secondary);">End Date</label>
+                        <input type="date" id="endDate" name="endDate" 
+                               style="width: 100%; padding: 0.75rem; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-primary);">
+                    </div>
+                    <div style="display: flex; align-items: flex-end; gap: 0.5rem;">
+                        <button type="submit" class="btn btn-primary" style="flex: 1;">Search</button>
+                        <a th:href="@{/bookings}" class="btn btn-secondary">Clear</a>
+                    </div>
+                </form>
+                <form method="get" style="display: flex; gap: 1rem;">
+                    <select name="status" style="padding: 0.75rem; background-color: var(--bg-tertiary); border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-primary);">
+                        <option value="">All Statuses</option>
+                        <option th:each="bookingStatus : ${bookingStatuses}" th:value="${bookingStatus}" th:text="${bookingStatus}" 
+                                th:selected="${selectedStatus == bookingStatus}"></option>
+                    </select>
+                    <button type="submit" class="btn btn-secondary">Filter by Status</button>
+                </form>
+            </div>
+
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Booking ID</th>
+                        <th>Guest Name</th>
+                        <th>Room</th>
+                        <th>Check-in</th>
+                        <th>Check-out</th>
+                        <th>Total Amount</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody th:if="${bookings != null and !bookings.isEmpty()}">
+                    <tr th:each="booking : ${bookings}">
+                        <td>
+                            <a href="#" th:href="@{/bookings/{id}(id=${booking.id})}" style="color: var(--accent-primary); text-decoration: none;">
+                                <span th:text="'#' + ${booking.id}">BK001</span>
+                            </a>
+                        </td>
+                        <td th:text="${booking.guest != null ? (booking.guest.firstName + ' ' + booking.guest.lastName) : 'N/A'}">Guest Name</td>
+                        <td th:text="${booking.room != null ? booking.room.roomNumber : 'N/A'}">101</td>
+                        <td th:text="${booking.checkInDate != null ? #temporals.format(booking.checkInDate, 'MMM dd, yyyy') : 'N/A'}">Jan 01, 2025</td>
+                        <td th:text="${booking.checkOutDate != null ? #temporals.format(booking.checkOutDate, 'MMM dd, yyyy') : 'N/A'}">Jan 05, 2025</td>
+                        <td th:if="${booking.totalAmount != null}">$<span th:text="${#numbers.formatDecimal(booking.totalAmount, 1, 2)}">400.00</span></td>
+                        <td th:if="${booking.totalAmount == null}">N/A</td>
+                        <td>
+                            <span th:if="${booking.status != null}" class="badge" th:classappend="${'badge-' + #strings.toLowerCase(booking.status.name())}">
+                                <span th:text="${booking.status}">PENDING</span>
+                            </span>
+                            <span th:if="${booking.status == null}" class="badge badge-pending">N/A</span>
+                        </td>
+                        <td>
+                            <a href="#" th:href="@{/bookings/{id}(id=${booking.id})}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size: 0.9rem;">View</a>
+                        </td>
+                    </tr>
+                </tbody>
+                <tbody th:if="${bookings == null or bookings.isEmpty()}">
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 2rem; color: var(--text-secondary);">
+                            No bookings found. <a th:href="@{/bookings/new}" style="color: var(--accent-primary); font-weight: 600;">Create one</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Taxi Request Details - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1 th:text="'Taxi Request #' + ${taxiRequest.id}">Taxi Request #1</h1>
+        </div>
+
+        <div class="grid grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Guest Information</h2>
+                </div>
+                <div>
+                    <p><strong>Name:</strong> <span th:text="${taxiRequest.booking.guest.firstName + ' ' + taxiRequest.booking.guest.lastName}">Guest Name</span></p>
+                    <p><strong>Phone:</strong> <span th:text="${taxiRequest.booking.guest.phone}">+1234567890</span></p>
+                    <p><strong>Room:</strong> <span th:text="${taxiRequest.booking.room.roomNumber}">101</span></p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Request Details</h2>
+                </div>
+                <div>
+                    <p><strong>Pickup:</strong> <span th:text="${taxiRequest.pickupLocation}">Hotel</span></p>
+                    <p><strong>Destination:</strong> <span th:text="${taxiRequest.destination}">Airport</span></p>
+                    <p><strong>Status:</strong> 
+                        <span class="badge" th:classappend="'badge-' + ${taxiRequest.status.toString().toLowerCase()}">
+                            <span th:text="${taxiRequest.status}">PENDING</span>
+                        </span>
+                    </p>
+                </div>
+            </div>
+
+            <div class="card" th:if="${taxiRequest.status.toString() != 'PENDING'}">
+                <div class="card-header">
+                    <h2>Driver Information</h2>
+                </div>
+                <div>
+                    <p><strong>Driver Name:</strong> <span th:text="${taxiRequest.driverName} ?: 'Not assigned'">John Smith</span></p>
+                    <p><strong>Vehicle:</strong> <span th:text="${taxiRequest.vehicleNumber} ?: 'N/A'">ABC-1234</span></p>
+                    <p><strong>Phone:</strong> <span th:text="${taxiRequest.phoneNumber} ?: 'N/A'">+9876543210</span></p>
+                    <p><strong>Estimated Cost:</strong> $<span th:text="${taxiRequest.estimatedCost} ?: '0.00'">25.00</span></p>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Timeline</h2>
+                </div>
+                <div>
+                    <p><strong>Requested:</strong> <span th:text="${taxiRequest.requestedTime != null ? #temporals.format(taxiRequest.requestedTime, 'MMM dd, yyyy HH:mm') : 'N/A'}">Jan 01, 2025 10:00</span></p>
+                    <p th:if="${taxiRequest.estimatedArrivalTime}"><strong>ETA:</strong> <span th:text="${#temporals.format(taxiRequest.estimatedArrivalTime, 'MMM dd, yyyy HH:mm')}">Jan 01, 2025 10:15</span></p>
+                    <p th:if="${taxiRequest.completedAt}"><strong>Completed:</strong> <span th:text="${#temporals.format(taxiRequest.completedAt, 'MMM dd, yyyy HH:mm')}">Jan 01, 2025 11:00</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card" th:if="${taxiRequest.notes}">
+            <div class="card-header">
+                <h2>Notes</h2>
+            </div>
+            <p th:text="${taxiRequest.notes}">Special instructions for driver</p>
+        </div>
+
+        <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+            <form th:action="@{/taxi/{id}/confirm(id=${taxiRequest.id})}" method="post" 
+                  th:if="${taxiRequest.status.toString() == 'PENDING'}" style="display: inline;">
+                <div style="background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius); padding: 1rem;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                        <input type="text" name="driverName" placeholder="Driver Name" required>
+                        <input type="text" name="vehicleNumber" placeholder="Vehicle Number" required>
+                        <input type="text" name="phoneNumber" placeholder="Phone Number" required>
+                        <input type="number" name="estimatedCost" placeholder="Estimated Cost" step="0.01" required>
+                    </div>
+                    <button type="submit" class="btn btn-success">Confirm & Assign Taxi</button>
+                </div>
+            </form>
+
+            <form th:action="@{/taxi/{id}/status(id=${taxiRequest.id})}" method="post"
+                  th:if="${taxiRequest.status.toString() == 'CONFIRMED' || taxiRequest.status.toString() == 'ON_THE_WAY'}" style="display: inline;">
+                <select name="status" style="padding: 0.75rem; background-color: var(--bg-secondary); border: 1px solid var(--border-color); border-radius: var(--radius); color: var(--text-primary);">
+                    <option value="ON_THE_WAY" th:selected="${taxiRequest.status.toString() == 'CONFIRMED'}">On the Way</option>
+                    <option value="COMPLETED" th:selected="${taxiRequest.status.toString() == 'ON_THE_WAY'}">Mark as Completed</option>
+                </select>
+                <button type="submit" class="btn btn-primary" style="margin-left: 0.5rem;">Update Status</button>
+            </form>
+
+            <form th:action="@{/taxi/{id}/cancel(id=${taxiRequest.id})}" method="post" 
+                  th:if="${taxiRequest.status.toString() != 'COMPLETED' && taxiRequest.status.toString() != 'CANCELLED'}" style="display: inline;">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Cancel this taxi request?');">Cancel Request</button>
+            </form>
+
+            <a th:href="@{/taxi}" class="btn btn-secondary">Back to Requests</a>
+        </div>
+    </th:block>
+</body>
+</html>

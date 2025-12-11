@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guest Details - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1 th:text="${guest.firstName + ' ' + guest.lastName}">Guest Name</h1>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h2>Personal Information</h2>
+                <a href="#" th:href="@{/guests/{id}/edit(id=${guest.id})}" class="btn btn-primary">Edit</a>
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem;">
+                <div>
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">Email</label>
+                    <p th:text="${guest.email != null ? guest.email : 'N/A'}">email@example.com</p>
+                </div>
+                <div>
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">Phone</label>
+                    <p th:text="${guest.phone != null ? guest.phone : 'N/A'}">+1234567890</p>
+                </div>
+                <div>
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">ID Number</label>
+                    <p th:text="${guest.idNumber != null ? guest.idNumber : 'N/A'}">12345678</p>
+                </div>
+                <div>
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">ID Type</label>
+                    <p th:text="${guest.idType != null ? guest.idType : 'N/A'}">PASSPORT</p>
+                </div>
+                <div>
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">Date of Birth</label>
+                    <p th:if="${guest.dateOfBirth != null}" th:text="${#temporals.format(guest.dateOfBirth, 'MMM dd, yyyy')}">1990-01-01</p>
+                    <p th:if="${guest.dateOfBirth == null}">N/A</p>
+                </div>
+                <div>
+                    <label style="color: var(--text-secondary); font-size: 0.9rem;">Country</label>
+                    <p th:text="${guest.country != null ? guest.country : 'N/A'}">USA</p>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-color);">
+                <label style="color: var(--text-secondary); font-size: 0.9rem;">Address</label>
+                <p th:text="${guest.address != null ? guest.address : 'No address provided'}">123 Main Street</p>
+            </div>
+
+            <div style="margin-top: 1.5rem;">
+                <label style="color: var(--text-secondary); font-size: 0.9rem;">Preferences</label>
+                <p th:text="${guest.preferences != null ? guest.preferences : 'No preferences'}">Non-smoking, High floor</p>
+            </div>
+
+            <div style="margin-top: 2rem; display: flex; gap: 1rem;">
+                <a href="#" th:href="@{/guests/{id}/edit(id=${guest.id})}" class="btn btn-primary">Edit Guest</a>
+                <form th:action="@{/guests/{id}/delete(id=${guest.id})}" method="post" style="display: inline;">
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this guest?');">Delete Guest</button>
+                </form>
+                <a th:href="@{/guests}" class="btn btn-secondary">Back to Guests</a>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>

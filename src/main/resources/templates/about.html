@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en" th:replace="~{layout :: layout (~{::content})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - SuiteSpot</title>
+</head>
+<body>
+    <th:block th:fragment="content">
+        <div class="page-header">
+            <h1>About SuiteSpot</h1>
+            <p style="color: var(--text-secondary);">Hotel Management System</p>
+        </div>
+
+        <!-- System Information -->
+        <div class="card">
+            <div class="card-header">
+                <h2>System Information</h2>
+            </div>
+            <div style="line-height: 1.8;">
+                <p><strong>SuiteSpot</strong> is a comprehensive hotel management system designed to streamline operations and enhance guest experiences.</p>
+                
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-primary);">Key Features</h3>
+                <ul style="margin-left: 2rem; color: var(--text-secondary);">
+                    <li>Complete booking management system</li>
+                    <li>Guest information and profile management</li>
+                    <li>Room availability and status tracking</li>
+                    <li>Check-in and check-out processing</li>
+                    <li>Billing and invoice generation</li>
+                    <li>Taxi request management</li>
+                    <li>Admin dashboard with comprehensive reports</li>
+                    <li>Database backup and restore functionality</li>
+                </ul>
+
+                <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--accent-primary);">Technology Stack</h3>
+                <ul style="margin-left: 2rem; color: var(--text-secondary);">
+                    <li><strong>Backend:</strong> Spring Boot, Spring Data JPA, Spring Security</li>
+                    <li><strong>Database:</strong> PostgreSQL</li>
+                    <li><strong>Frontend:</strong> Thymeleaf, HTML5, CSS3</li>
+                    <li><strong>Build Tool:</strong> Maven</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Development Team -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Development Team</h2>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; margin-top: 1.5rem;">
+                <div style="padding: 1.5rem; background-color: var(--bg-tertiary); border-radius: var(--radius); border: 1px solid var(--border-color);">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">👨‍💻</div>
+                    <h3 style="color: var(--accent-primary); margin-bottom: 0.5rem;">Basim Kafeel</h3>
+                    <p style="color: var(--text-secondary);">Student ID: 22i-0775</p>
+                    <p style="color: var(--text-secondary); margin-top: 0.5rem;">Developer</p>
+                </div>
+
+                <div style="padding: 1.5rem; background-color: var(--bg-tertiary); border-radius: var(--radius); border: 1px solid var(--border-color);">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">👨‍💻</div>
+                    <h3 style="color: var(--accent-primary); margin-bottom: 0.5rem;">Momin Munir</h3>
+                    <p style="color: var(--text-secondary);">Student ID: 22i-0854</p>
+                    <p style="color: var(--text-secondary); margin-top: 0.5rem;">Developer</p>
+                </div>
+
+                <div style="padding: 1.5rem; background-color: var(--bg-tertiary); border-radius: var(--radius); border: 1px solid var(--border-color);">
+                    <div style="font-size: 2.5rem; margin-bottom: 1rem;">👨‍💻</div>
+                    <h3 style="color: var(--accent-primary); margin-bottom: 0.5rem;">AbdurRehman Ahmed</h3>
+                    <p style="color: var(--text-secondary);">Student ID: 22i-0988</p>
+                    <p style="color: var(--text-secondary); margin-top: 0.5rem;">Developer</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Details -->
+        <div class="card">
+            <div class="card-header">
+                <h2>Project Details</h2>
+            </div>
+            <div style="line-height: 1.8; color: var(--text-secondary);">
+                <p>This project was developed as part of a software engineering course, demonstrating proficiency in:</p>
+                <ul style="margin-left: 2rem; margin-top: 1rem;">
+                    <li>Object-Oriented Programming principles</li>
+                    <li>Spring Framework and dependency injection</li>
+                    <li>Database design and management</li>
+                    <li>Web application development</li>
+                    <li>User interface design</li>
+                    <li>Security implementation</li>
+                </ul>
+                <p style="margin-top: 1.5rem;">
+                    <strong style="color: var(--text-primary);">SuiteSpot</strong> provides a complete solution for hotel management, 
+                    from booking creation to checkout and billing, ensuring efficient operations and excellent guest service.
+                </p>
+            </div>
+        </div>
+    </th:block>
+</body>
+</html>
+
